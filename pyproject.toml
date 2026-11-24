@@ -1,0 +1,64 @@
+[build-system]
+requires = ["hatchling>=1.24"]
+build-backend = "hatchling.build"
+
+[project]
+name = "dashcam-merge"
+dynamic = ["version"]
+description = "Merge Novatek-based dashcam clips (front, rear, interior) into one video per day that keeps the GPS track."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.11"
+authors = [{ name = "dashcam-merge contributors" }]
+keywords = ["vantrue", "dashcam", "novatek", "gps", "ffmpeg", "trackday", "telemetry"]
+classifiers = [
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+]
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "mypy>=1.11", "ruff>=0.6"]
+
+[project.urls]
+Homepage = "https://github.com/fsantos00/dashcam-merge"
+Issues = "https://github.com/fsantos00/dashcam-merge/issues"
+
+[project.scripts]
+dashcam-merge = "cli:main"
+
+[tool.hatch.version]
+path = "src/cli.py"
+
+[tool.hatch.build.targets.wheel]
+only-include = ["src"]
+sources = ["src"]  # installs cli, cameras, mp4 and render as top-level modules
+
+[tool.ruff]
+line-length = 110
+target-version = "py311"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "B", "UP", "SIM", "RUF", "PTH", "PL", "S", "N", "C4", "PT", "RET", "ARG"]
+ignore = [
+    "S603",    # subprocess without shell=True is exactly what we want
+    "S607",    # ffmpeg is looked up on PATH on purpose
+    "PLR2004", # binary formats are full of magic offsets; they are documented in place
+    "PLR0913", # a few render/pipeline functions legitimately take many settings
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101", "PLR2004", "S108"]
+
+[tool.mypy]
+strict = true
+python_version = "3.11"
+files = ["src", "tests"]
+mypy_path = "src"
+
+[tool.pytest.ini_options]
+addopts = "-ra --strict-markers"
+testpaths = ["tests"]
+pythonpath = ["src"]
