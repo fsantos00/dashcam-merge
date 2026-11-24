@@ -51,7 +51,8 @@ def test_discover_is_recursive_skips_cache_and_keeps_first_duplicate(
 ) -> None:
     touch(tmp_path / "Normal" / "Front", "20261122_100000_0_N_A.MP4", "notes.txt")
     touch(tmp_path / "Normal" / "Back", "20261122_100000_0_N_C.MP4")
-    touch(tmp_path / "backup", "20261122_100000_0_N_A.MP4")
+    # sorts after "Normal" whether or not the OS compares paths case-sensitively
+    touch(tmp_path / "older_copy", "20261122_100000_0_N_A.MP4")
     touch(tmp_path / "cache", "20261122_110000_0_N_A.MP4")
     (tmp_path / "folder_N_A.MP4").mkdir()  # a directory with a clip-like name is ignored
     minutes = discover(tmp_path, exclude=tmp_path / "cache")

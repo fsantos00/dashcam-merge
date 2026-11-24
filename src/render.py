@@ -33,7 +33,7 @@ KNOTS_TO_KMH, KNOTS_TO_MPH = 1.852, 1.150779
 
 FFMPEG = ("ffmpeg", "-hide_banner", "-nostdin", "-loglevel", "error", "-y")
 AUDIO = ("-c:a", "aac", "-b:a", "128k", "-ar", "48000", "-ac", "2")
-HWDEC = {"win32": "d3d11va", "darwin": "videotoolbox"}.get(sys.platform, "auto")  # CPU fallback is ffmpeg's
+HWDEC = "auto"  # a named device (d3d11va, videotoolbox) fails outright on machines without one
 
 # Tried in this order by "auto". Quality is roughly CQP 20/22 for all; hvc1 so Apple players accept HEVC.
 ENCODERS: dict[str, tuple[str, ...]] = {
